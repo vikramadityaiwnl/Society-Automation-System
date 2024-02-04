@@ -11,12 +11,7 @@ Welcome to the Society Automation System, a comprehensive solution for automatin
     - [Energy Conservation](#energy-conservation)
     - [Environment Monitoring](#environment-monitoring)
     - [Security Monitoring](#security-monitoring)
-3. [Setup Instructions](#setup-instructions)
-4. [Directory Structure](#directory-structure)
-5. [Dependencies](#dependencies)
-6. [Contribution](#contribution)
-7. [License](#license)
-
+      
 ## Overview
 The Society Automation System aims to create a smart and interconnected community through the integration of technology. By combining a Flutter mobile application with Arduino-based hardware, residents can conveniently control and monitor various aspects of their living environment.
 
