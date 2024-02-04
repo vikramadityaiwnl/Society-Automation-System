@@ -6,8 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 class ArduinoServerAPI {
-  static String _baseUrlOne = 'http://192.168.0.112'; // Home - PIR
-  static String _baseUrlTwo = 'http://192.168.0.116'; // Water - AQ
+  static String _baseUrlOne = 'http://192.168.161.202'; // Home - PIR
+  static String _baseUrlTwo = 'http://192.168.161.221'; // Water - AQ
   static const timeout = Duration(seconds: 10);
 
   BuildContext context;

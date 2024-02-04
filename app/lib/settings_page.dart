@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:app/api/arduino_server_api.dart';
 import 'package:app/helper/custom_dialog.dart';
 import 'package:flutter/material.dart';
