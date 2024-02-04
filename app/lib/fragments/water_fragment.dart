@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:app/api/arduino_server_api.dart';
 import 'package:flutter/material.dart';
 
 class WaterFragment extends StatefulWidget {
@@ -8,8 +11,22 @@ class WaterFragment extends StatefulWidget {
 }
 
 class WaterFragmentState extends State<WaterFragment> {
-  double _waterLevelLimit = 50;
-  final double _minWaterLevelLimit = 20;
+  Water water = Water(
+    level: 0,
+  );
+  Timer? timer;
+
+  @override
+  void initState() {
+    super.initState();
+    timer = Timer.periodic(const Duration(seconds: 5), (timer) async {
+      await ArduinoServerAPI(context: context).getWaterLevel();
+
+      setState(() {
+        water = Status.water;
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,13 +49,14 @@ class WaterFragmentState extends State<WaterFragment> {
                 ListTile(
                   title: const Text('Water Level'),
                   subtitle: LinearProgressIndicator(
-                    value: 0.5,
+                    value: water.level,
                     color: Colors.blue,
+                    backgroundColor: Colors.blue[100],
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  trailing: const Text(
-                    '50%',
-                    style: TextStyle(
+                  trailing: Text(
+                    '${water.level}%',
+                    style: const TextStyle(
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -55,49 +73,6 @@ class WaterFragmentState extends State<WaterFragment> {
                   ),
                 ),
               ],
-            ),
-          ),
-          const SizedBox(height: 16),
-          waterPump(),
-        ],
-      ),
-    );
-  }
-
-  Card waterPump() {
-    return Card(
-      child: Column(
-        children: [
-          const ListTile(
-            title: Text(
-              'Water Automation Settings',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            trailing: Icon(Icons.water_damage_outlined),
-          ),
-          const Divider(height: 1),
-          ListTile(
-            title: const Text('Limit Water Level'),
-            subtitle: Slider(
-              value: _waterLevelLimit,
-              onChanged: (value) {
-                if (value < _minWaterLevelLimit) return;
-
-                setState(() {
-                  _waterLevelLimit = value;
-                });
-              },
-              max: 100,
-              divisions: 10,
-              label: '$_waterLevelLimit%',
-            ),
-            trailing: Text(
-              '$_waterLevelLimit%',
-              style: const TextStyle(
-                fontWeight: FontWeight.bold,
-              ),
             ),
           ),
         ],

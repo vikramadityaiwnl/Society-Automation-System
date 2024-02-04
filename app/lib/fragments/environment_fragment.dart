@@ -12,7 +12,7 @@ class EnvironmentFragment extends StatefulWidget {
 
 class _EnvironmentFragmentState extends State<EnvironmentFragment> {
   Weather weather = Weather(
-    weatherName: '',
+    weatherName: 'Unknown',
     temperature: '',
     humidity: '',
     visibility: '',
@@ -20,7 +20,7 @@ class _EnvironmentFragmentState extends State<EnvironmentFragment> {
   );
   Environment environment = Environment(
     value: 0,
-    category: '',
+    category: 'Unknown',
     color: Colors.white,
   );
 
@@ -31,6 +31,8 @@ class _EnvironmentFragmentState extends State<EnvironmentFragment> {
     super.initState();
 
     setState(() {
+      if (Status.weather.weatherName.isEmpty && Status.environment.category.isEmpty) return;
+
       weather = Status.weather;
       environment = Status.environment;
     });

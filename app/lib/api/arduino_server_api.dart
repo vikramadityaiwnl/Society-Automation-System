@@ -6,7 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 class ArduinoServerAPI {
-  static const String _baseUrl = 'http://192.168.0.108';
+  static String _baseUrlOne = 'http://192.168.0.112'; // Home - PIR
+  static String _baseUrlTwo = 'http://192.168.0.116'; // Water - AQ
   static const timeout = Duration(seconds: 10);
 
   BuildContext context;
@@ -17,10 +18,9 @@ class ArduinoServerAPI {
     String msg = "";
 
     try {
-      final response = await http.get(Uri.parse('$_baseUrl/status')).timeout(timeout);
+      // Home
+      final response = await http.get(Uri.parse('$_baseUrlOne/status')).timeout(timeout);
       final json = convert.jsonDecode(response.body);
-
-      log(json.toString());
 
       if (json == null || json['success'] != "true") return false;
 
@@ -32,9 +32,14 @@ class ArduinoServerAPI {
       Home home = Home(led1: led1);
       Status.setHome(home);
 
-      int value = int.parse(json['env']['value']);
-      String category = json['env']['category'];
-      Color color = Color(int.parse(json['env']['color'].substring(1, 7), radix: 16) + 0xFF000000);
+      // Environment
+      final response2 = await http.get(Uri.parse('$_baseUrlTwo/aq')).timeout(timeout);
+      final json2 = convert.jsonDecode(response2.body);
+
+      int value = int.parse(json2['value']);
+      String category = json2['category'];
+      Color color = Color(int.parse(json2['color'].substring(1, 7), radix: 16) + 0xFF000000);
+
       Environment environment = Environment(value: value, category: category, color: color);
       Status.setEnvironment(environment);
 
@@ -51,7 +56,7 @@ class ArduinoServerAPI {
   Future<bool> changeHomeComponentState(String componenetName, bool value) async {
     String msg = "";
     try {
-      final response = await http.get(Uri.parse('$_baseUrl/home/$componenetName/${value ? 'on' : 'off'}')).timeout(timeout);
+      final response = await http.get(Uri.parse('$_baseUrlOne/home/$componenetName/${value ? 'on' : 'off'}')).timeout(timeout);
       final json = convert.jsonDecode(response.body);
 
       if (json == null || json['success'] != "true") return false;
@@ -106,12 +111,10 @@ class ArduinoServerAPI {
 
   Future<bool> getAirQuality() async {
     try {
-      final response = await http.get(Uri.parse('$_baseUrl/env/aq')).timeout(timeout);
+      final response = await http.get(Uri.parse('$_baseUrlTwo/aq')).timeout(timeout);
       final json = convert.jsonDecode(response.body);
 
       if (json == null || json['success'] != "true") return false;
-
-      // msg = json['message'];
 
       int value = int.parse(json['value']);
       String category = json['category'];
@@ -127,12 +130,49 @@ class ArduinoServerAPI {
       return false;
     }
   }
+
+  Future<bool> getWaterLevel() async {
+    try {
+      final response = await http.get(Uri.parse('$_baseUrlTwo/water')).timeout(timeout);
+      final json = convert.jsonDecode(response.body);
+
+      if (json == null || json['success'] != "true") return false;
+
+      double level = double.parse(json['level']);
+
+      Water water = Water(level: level);
+      Status.setWater(water);
+
+      return true;
+    } catch (e) {
+      log(e.toString());
+      // msg = "Something went wrong! Please try again later.";
+      return false;
+    }
+  }
+
+  setBaseUrlOne(String baseUrl) {
+    _baseUrlOne = 'http://$baseUrl';
+  }
+
+  setBaseUrlTwo(String baseUrl) {
+    _baseUrlTwo = 'http://$baseUrl';
+  }
+
+  String getBaseUrlOne() {
+    return _baseUrlOne;
+  }
+
+  String getBaseUrlTwo() {
+    return _baseUrlTwo;
+  }
 }
 
 class Status {
   static Home home = Home(led1: 0);
   static Environment environment = Environment(value: 0, category: '', color: Colors.white);
   static Weather weather = Weather(weatherName: '', temperature: '', humidity: '', visibility: '', icon: Icons.cloud);
+  static Water water = Water(level: 0);
 
   static void setHome(Home home) {
     Status.home = home;
@@ -144,6 +184,10 @@ class Status {
 
   static void setWeather(Weather weather) {
     Status.weather = weather;
+  }
+
+  static void setWater(Water water) {
+    Status.water = water;
   }
 }
 
@@ -159,6 +203,12 @@ class Environment {
   Color color;
 
   Environment({required this.value, required this.category, required this.color});
+}
+
+class Water {
+  double level;
+
+  Water({required this.level});
 }
 
 class Weather {

@@ -2,6 +2,7 @@ import 'package:app/api/arduino_server_api.dart';
 import 'package:app/fragments/automation_fragment.dart';
 import 'package:app/fragments/environment_fragment.dart';
 import 'package:app/fragments/water_fragment.dart';
+import 'package:app/settings_page.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
@@ -36,18 +37,18 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Society Automation App'), actions: [
-        IconButton(
-          icon: const Icon(Icons.notifications),
-          tooltip: 'Notifications',
-          onPressed: () {},
-        ),
-        IconButton(
-          icon: const Icon(Icons.admin_panel_settings),
-          tooltip: 'Admin Login',
-          onPressed: () {},
-        ),
-      ]),
+      appBar: AppBar(
+        title: const Text('Society Automation App'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.settings),
+            tooltip: 'Setting',
+            onPressed: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) => const SettingsPage()));
+            },
+          )
+        ],
+      ),
       body: isLoading
           ? const Center(
               child: CircularProgressIndicator(),
