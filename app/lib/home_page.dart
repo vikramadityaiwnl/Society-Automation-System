@@ -6,13 +6,17 @@ import 'package:app/settings_page.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  final bool isAdmin;
+  const HomePage({Key? key, required this.isAdmin}) : super(key: key);
 
   @override
   State<HomePage> createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
+  bool isLoading = true;
+  bool isAdmin = false;
+
   int _fragmentIndex = 0;
   final List<Widget> _fragments = <Widget>[
     const AutomationFragment(),
@@ -20,11 +24,11 @@ class _HomePageState extends State<HomePage> {
     const EnvironmentFragment(),
   ];
 
-  bool isLoading = true;
-
   @override
   void initState() {
     super.initState();
+
+    isAdmin = widget.isAdmin;
 
     Future.delayed(Duration.zero, () async {
       await ArduinoServerAPI(context: context).getStatus();
@@ -55,18 +59,19 @@ class _HomePageState extends State<HomePage> {
             )
           : _fragments[_fragmentIndex],
       bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
+        items: <BottomNavigationBarItem>[
+          const BottomNavigationBarItem(
             icon: Icon(Icons.memory),
             label: 'Automation',
             tooltip: 'Automation',
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.water_drop),
-            label: 'Water',
-            tooltip: 'Water',
-          ),
-          BottomNavigationBarItem(
+          if (isAdmin)
+            const BottomNavigationBarItem(
+              icon: Icon(Icons.water_drop),
+              label: 'Water',
+              tooltip: 'Water',
+            ),
+          const BottomNavigationBarItem(
             icon: Icon(Icons.grass),
             label: 'Environment',
             tooltip: 'Environment',

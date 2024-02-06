@@ -10,6 +10,8 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
+  CustomDialog? customDialog;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,7 +40,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     title: const Text('Server One'),
                     subtitle: TextButton(
                       onPressed: () {
-                        CustomDialog.showCustomDialogWithInput(context, 'Configure Server One', 'Enter the server IP', (String input) {
+                        customDialog!.showCustomDialogWithInput('Configure Server One', 'Enter the server IP', (String input) {
                           if (input.isEmpty) return;
 
                           ArduinoServerAPI(context: context).setBaseUrlOne(input);
@@ -52,7 +54,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     title: const Text('Server Two'),
                     subtitle: TextButton(
                       onPressed: () {
-                        CustomDialog.showCustomDialogWithInput(context, 'Configure Server Two', 'Enter the server IP', (String input) {
+                        customDialog!.showCustomDialogWithInput('Configure Server Two', 'Enter the server IP', (String input) {
                           if (input.isEmpty) return;
 
                           ArduinoServerAPI(context: context).setBaseUrlTwo(input);
@@ -69,5 +71,12 @@ class _SettingsPageState extends State<SettingsPage> {
         ),
       ),
     );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    customDialog = CustomDialog(context: context);
   }
 }
