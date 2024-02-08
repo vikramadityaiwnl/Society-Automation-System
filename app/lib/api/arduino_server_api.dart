@@ -29,7 +29,8 @@ class ArduinoServerAPI {
       msg = json['message'];
 
       int led1 = int.parse(json['home']['led1']);
-      Home home = Home(led1: led1);
+      int fan = int.parse(json['home']['fan']);
+      Home home = Home(led1: led1, fan: fan);
       Status.setHome(home);
 
       // Environment
@@ -169,7 +170,7 @@ class ArduinoServerAPI {
 }
 
 class Status {
-  static Home home = Home(led1: 0);
+  static Home home = Home(led1: 0, fan: 0);
   static Environment environment = Environment(value: 0, category: '', color: Colors.white);
   static Weather weather = Weather(weatherName: '', temperature: '', humidity: '', visibility: '', icon: Icons.cloud);
   static Water water = Water(level: 0);
@@ -193,8 +194,9 @@ class Status {
 
 class Home {
   int led1;
+  int fan;
 
-  Home({required this.led1});
+  Home({required this.led1, required this.fan});
 }
 
 class Environment {

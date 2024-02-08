@@ -10,12 +10,14 @@ class AutomationFragment extends StatefulWidget {
 
 class AutomationFragmentState extends State<AutomationFragment> {
   bool _led1 = false;
+  bool _fan = false;
 
   @override
   void initState() {
     super.initState();
 
     _led1 = Status.home.led1 == 1 ? true : false;
+    _fan = Status.home.fan == 1 ? true : false;
   }
 
   @override
@@ -56,17 +58,15 @@ class AutomationFragmentState extends State<AutomationFragment> {
                   title: const Text('FAN'),
                   subtitle: const Text('Control the FAN of your home.'),
                   trailing: Switch(
-                    value: false,
-                    onChanged: (value) async {},
-                  ),
-                ),
-                const Divider(height: 1),
-                ListTile(
-                  title: const Text('LED 2'),
-                  subtitle: const Text('Control the LED 2 of your home.'),
-                  trailing: Switch(
-                    value: false,
-                    onChanged: (value) async {},
+                    value: _fan,
+                    onChanged: (value) async {
+                      if (!await ArduinoServerAPI(context: context).changeHomeComponentState('fan', value)) return;
+
+                      Status.home.fan = value ? 1 : 0;
+                      setState(() {
+                        _fan = value;
+                      });
+                    },
                   ),
                 ),
               ],

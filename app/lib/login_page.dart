@@ -1,4 +1,6 @@
+import 'package:app/api/users.dart';
 import 'package:app/helper/custom_dialog.dart';
+import 'package:app/helper/toast.dart';
 import 'package:app/home_page.dart';
 import 'package:flutter/material.dart';
 
@@ -12,7 +14,9 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+
   bool _isAdmin = false;
+  bool _isPasswordVisible = false;
 
   CustomDialog? customDialog;
 
@@ -59,12 +63,28 @@ class _LoginPageState extends State<LoginPage> {
                     const SizedBox(height: 16),
                     TextField(
                       controller: _passwordController,
-                      decoration: const InputDecoration(
-                        border: OutlineInputBorder(),
+                      decoration: InputDecoration(
+                        border: const OutlineInputBorder(),
                         labelText: 'Password',
-                        prefixIcon: Icon(Icons.lock),
+                        prefixIcon: const Icon(Icons.lock),
+                        suffixIcon: _isPasswordVisible
+                            ? IconButton(
+                                onPressed: () {
+                                  setState(() {
+                                    _isPasswordVisible = !_isPasswordVisible;
+                                  });
+                                },
+                                icon: const Icon(Icons.visibility))
+                            : IconButton(
+                                onPressed: () {
+                                  setState(() {
+                                    _isPasswordVisible = !_isPasswordVisible;
+                                  });
+                                },
+                                icon: const Icon(Icons.visibility_off),
+                              ),
                       ),
-                      obscureText: true,
+                      obscureText: !_isPasswordVisible,
                     ),
                     const SizedBox(height: 24),
                     ElevatedButton.icon(
@@ -73,13 +93,20 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                       onPressed: () async {
                         customDialog!.showLoadingDialog();
-                        await Future.delayed(const Duration(seconds: 2));
+
+                        User user = Users().login(_usernameController.text, _passwordController.text, _isAdmin);
+                        if (user.name.isEmpty) {
+                          Toast.show(context, 'Invalid username or password! Please try again.');
+                          customDialog!.dismiss();
+                          return;
+                        }
+
                         customDialog!.dismiss();
 
                         if (!context.mounted) return;
                         Navigator.pushReplacement(
                           context,
-                          MaterialPageRoute(builder: (context) => HomePage(isAdmin: _isAdmin)),
+                          MaterialPageRoute(builder: (context) => HomePage(user: user, isAdmin: _isAdmin)),
                         );
                       },
                       icon: const Icon(Icons.login),

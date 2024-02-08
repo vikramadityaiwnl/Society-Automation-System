@@ -1,13 +1,16 @@
 import 'package:app/api/arduino_server_api.dart';
+import 'package:app/api/users.dart';
 import 'package:app/fragments/automation_fragment.dart';
 import 'package:app/fragments/environment_fragment.dart';
 import 'package:app/fragments/water_fragment.dart';
+import 'package:app/profile_page.dart';
 import 'package:app/settings_page.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
   final bool isAdmin;
-  const HomePage({Key? key, required this.isAdmin}) : super(key: key);
+  final User user;
+  const HomePage({Key? key, required this.user, required this.isAdmin}) : super(key: key);
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -16,11 +19,16 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   bool isLoading = true;
   bool isAdmin = false;
+  User user = Users.emptyUser();
 
   int _fragmentIndex = 0;
-  final List<Widget> _fragments = <Widget>[
+  final List<Widget> _adminFragments = <Widget>[
     const AutomationFragment(),
     const WaterFragment(),
+    const EnvironmentFragment(),
+  ];
+  final List<Widget> _residentFragments = <Widget>[
+    const AutomationFragment(),
     const EnvironmentFragment(),
   ];
 
@@ -29,6 +37,7 @@ class _HomePageState extends State<HomePage> {
     super.initState();
 
     isAdmin = widget.isAdmin;
+    user = widget.user;
 
     Future.delayed(Duration.zero, () async {
       await ArduinoServerAPI(context: context).getStatus();
@@ -50,6 +59,13 @@ class _HomePageState extends State<HomePage> {
             onPressed: () {
               Navigator.push(context, MaterialPageRoute(builder: (context) => const SettingsPage()));
             },
+          ),
+          IconButton(
+            icon: const Icon(Icons.person),
+            tooltip: 'Profile',
+            onPressed: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) => ProfilePage(user: user)));
+            },
           )
         ],
       ),
@@ -57,7 +73,9 @@ class _HomePageState extends State<HomePage> {
           ? const Center(
               child: CircularProgressIndicator(),
             )
-          : _fragments[_fragmentIndex],
+          : isAdmin
+              ? _adminFragments[_fragmentIndex]
+              : _residentFragments[_fragmentIndex],
       bottomNavigationBar: BottomNavigationBar(
         items: <BottomNavigationBarItem>[
           const BottomNavigationBarItem(

@@ -79,4 +79,10 @@ class WaterFragmentState extends State<WaterFragment> {
       ),
     );
   }
+
+  @override
+  void dispose() {
+    timer?.cancel();
+    super.dispose();
+  }
 }
