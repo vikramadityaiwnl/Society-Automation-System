@@ -9,8 +9,8 @@
 ESP8266WebServer server(80);
 
 class WebServer {
-  const char* ssid = "Vass";
-  const char* password = "33445566";
+  const char* ssid = "be4st";
+  const char* password = "thebe4st";
 
   public:
     void init() {
@@ -28,11 +28,11 @@ class WebServer {
       Serial.print("IP address: ");
       Serial.println(WiFi.localIP());
 
-      server.on("/env/aq", []() {
+      server.on("/aq", []() {
         Environment::handleAirQualityRequest(&sendResponse);
       });
       server.on("/water", []() {
-        Water::getDistance(&sendResponse);
+        Water::getWaterLevel(&sendResponse);
       });
 
       server.begin();

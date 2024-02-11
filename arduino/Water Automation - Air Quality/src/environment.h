@@ -7,7 +7,7 @@ String env_category, env_color;
 int env_value;
 
 class Environment {
-  static const int pinAQ = 4;
+  static const int pinAQ = 12;
 
   public:
     void init() {
@@ -28,26 +28,14 @@ class Environment {
     }
 
     static void readAQ() {
-      env_value = analogRead(pinAQ);
+      env_value = digitalRead(pinAQ);
 
-      if(env_value > 0 && env_value < 50) {
+      if(env_value == HIGH) {
         env_category = "Good";
         env_color = "#57a74f";
-      } else if(env_value > 50 && env_value < 100) {
-        env_category = "Statisfactory";
-        env_color = "#a3c854";
-      } else if(env_value > 100 && env_value < 200) {
-        env_category = "Moderate";
-        env_color = "#fff833";
-      } else if(env_value > 200 && env_value < 300) {
-        env_category = "Poor";
-        env_color = "#f39c33";
-      } else if(env_value > 300 && env_value < 400) {
-        env_category = "Very Poor";
+      } else if(env_value == LOW) {
+        env_category = "Bad";
         env_color = "#e93f32";
-      } else if(env_value > 500) {
-        env_category = "Hazardous";
-        env_color = "#af2d25";
       }
     }
 };
