@@ -46,6 +46,7 @@ class ProfilePage extends StatelessWidget {
                             const SizedBox(height: 10),
                             Text(
                               user.email,
+                              overflow: TextOverflow.ellipsis,
                               style: const TextStyle(
                                 fontSize: 16,
                               ),

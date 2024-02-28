@@ -4,7 +4,6 @@ import 'package:app/fragments/automation_fragment.dart';
 import 'package:app/fragments/environment_fragment.dart';
 import 'package:app/fragments/water_fragment.dart';
 import 'package:app/profile_page.dart';
-import 'package:app/settings_page.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
@@ -53,13 +52,6 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         title: const Text('Society Automation App'),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.settings),
-            tooltip: 'Setting',
-            onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => const SettingsPage()));
-            },
-          ),
           IconButton(
             icon: const Icon(Icons.person),
             tooltip: 'Profile',

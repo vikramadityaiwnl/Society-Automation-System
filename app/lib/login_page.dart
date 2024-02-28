@@ -38,6 +38,7 @@ class _LoginPageState extends State<LoginPage> {
                   children: <Widget>[
                     const Text(
                       'Welcome to Smart Society Automation',
+                      textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
@@ -46,6 +47,7 @@ class _LoginPageState extends State<LoginPage> {
                     const SizedBox(height: 16),
                     Text(
                       'Please enter your username and password to login as ${_isAdmin ? 'Admin' : 'User'}',
+                      textAlign: TextAlign.center,
                       style: const TextStyle(
                         fontSize: 16,
                         color: Colors.grey,
