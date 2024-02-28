@@ -16,13 +16,13 @@ class FireDetection {
     void detect() {
       int fire = digitalRead(FIRE_PIN);
 
-      if(fire == HIGH) {
+      if(fire == LOW) {
         digitalWrite(BUZZER_PIN, HIGH);
+        delay(2500);
+        digitalWrite(BUZZER_PIN, LOW);
       } else {
         digitalWrite(BUZZER_PIN, LOW);
       }
-
-      delay(1000);
     }
 };
 

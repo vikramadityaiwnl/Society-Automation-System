@@ -25,36 +25,35 @@ class GarbageDetection {
     
     void detect() {
       if(digitalRead(IR_SENSOR_PIN) == HIGH) return;
-      
-      int moisture = digitalRead(MOISTURE_PIN);
-      Serial.println("Moisture: " + String(moisture));
+
+      delay(1000);
+
+      int moisture = digitalRead(MOISTURE_PIN);      
 
       if(moisture == HIGH) {
         moveServo(CLOCK_WISE);
       } else {
         moveServo(ANTI_CLOCK_WISE);
       }
-
-      delay(1000);
     }
 
     void moveServo(int direction) {
       if(direction == CLOCK_WISE) {
         servo.write(0);
         delay(100);
-        servo.write(90);
-        delay(100);
+        servo.write(STOP);
+        delay(1000);
         servo.write(180);
         delay(100);
-        servo.write(90);
+        servo.write(STOP);
       } else {
         servo.write(180);
         delay(100);
-        servo.write(90);
-        delay(100);
+        servo.write(STOP);
+        delay(1000);
         servo.write(0);
         delay(100);
-        servo.write(90);
+        servo.write(STOP);
       }
     }
 
