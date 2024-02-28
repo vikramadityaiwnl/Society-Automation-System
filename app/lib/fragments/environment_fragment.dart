@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:app/api/arduino_server_api.dart';
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 
 class EnvironmentFragment extends StatefulWidget {
@@ -19,7 +20,7 @@ class _EnvironmentFragmentState extends State<EnvironmentFragment> {
     icon: Icons.cloud,
   );
   Environment environment = Environment(
-    value: 0,
+    value: -1,
     category: 'Unknown',
     color: Colors.white,
   );
@@ -43,6 +44,17 @@ class _EnvironmentFragmentState extends State<EnvironmentFragment> {
       setState(() {
         environment = Status.environment;
       });
+
+      if (environment.value == 0) {
+        AwesomeNotifications().createNotification(
+          content: NotificationContent(
+            id: 10,
+            channelKey: 'basic_channel',
+            title: 'Air Quality Alert',
+            body: 'Air quality in your environment is bad.',
+          ),
+        );
+      }
     });
   }
 
@@ -119,7 +131,7 @@ class _EnvironmentFragmentState extends State<EnvironmentFragment> {
                   title: const Text('Air Quality'),
                   subtitle: const Text('Air quality in your environment is moderate.'),
                   trailing: Text(
-                    '${environment.value} PPM',
+                    '${environment.value == 1 ? "LOW" : "HIGH"} PPM',
                     style: const TextStyle(
                       fontWeight: FontWeight.bold,
                     ),

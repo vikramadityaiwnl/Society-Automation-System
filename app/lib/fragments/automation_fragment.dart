@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:app/api/arduino_server_api.dart';
 import 'package:flutter/material.dart';
 
@@ -11,6 +13,7 @@ class AutomationFragment extends StatefulWidget {
 class AutomationFragmentState extends State<AutomationFragment> {
   bool _led1 = false;
   bool _fan = false;
+  bool _gate = false;
 
   @override
   void initState() {
@@ -66,6 +69,38 @@ class AutomationFragmentState extends State<AutomationFragment> {
                       setState(() {
                         _fan = value;
                       });
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 16),
+          Card(
+            child: Column(
+              children: [
+                const ListTile(
+                  title: Text(
+                    'Gate',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  trailing: Icon(Icons.security),
+                ),
+                ListTile(
+                  title: const Text('Main gate'),
+                  subtitle: const Text('Control the main gate of your society.'),
+                  trailing: Switch(
+                    value: _gate,
+                    onChanged: (value) async {
+                      if (!value) return;
+
+                      setState(() {
+                        _gate = value;
+                      });
+
+                      await Future.delayed(const Duration(seconds: 5)).then((value) => setState(() => _gate = false));
                     },
                   ),
                 ),

@@ -1,8 +1,22 @@
 import 'package:app/login_page.dart';
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 
 void main() {
+  AwesomeNotifications().initialize(
+    null,
+    [
+      NotificationChannel(
+        channelKey: 'auto_notifications',
+        channelName: 'Auto Notifications',
+        channelDescription: 'Notifications scheduled by the app automatically',
+        defaultColor: const Color(0xFF9D50DD),
+        ledColor: const Color(0xFF9D50DD),
+      ),
+    ],
+    debug: true,
+  );
   runApp(const MyApp());
 }
 
@@ -48,6 +62,12 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   void initState() {
+    AwesomeNotifications().isNotificationAllowed().then((isAllowed) {
+      if (!isAllowed) {
+        AwesomeNotifications().requestPermissionToSendNotifications();
+      }
+    });
+
     super.initState();
     // Load the animation and navigate after a delay
     Future.delayed(const Duration(seconds: 5), () {
