@@ -54,8 +54,8 @@ class Users {
 
   List<User> get users => _users;
 
-  User login(String username, String password, bool isAdmin) {
-    return _users.firstWhere((user) => user.username == username && user.password == password && user.role == (isAdmin ? 'admin' : 'resident'), orElse: () => emptyUser());
+  User login(String username, String password) {
+    return _users.firstWhere((user) => user.username == username && user.password == password, orElse: () => emptyUser());
   }
 
   static User emptyUser() {

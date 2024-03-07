@@ -15,7 +15,6 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
-  bool _isAdmin = false;
   bool _isPasswordVisible = false;
 
   CustomDialog? customDialog;
@@ -45,10 +44,10 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ),
                     const SizedBox(height: 16),
-                    Text(
-                      'Please enter your username and password to login as ${_isAdmin ? 'Admin' : 'User'}',
+                    const Text(
+                      'Please enter your username and password to login',
                       textAlign: TextAlign.center,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 16,
                         color: Colors.grey,
                       ),
@@ -56,10 +55,10 @@ class _LoginPageState extends State<LoginPage> {
                     const SizedBox(height: 16),
                     TextField(
                       controller: _usernameController,
-                      decoration: InputDecoration(
-                        border: const OutlineInputBorder(),
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
                         labelText: 'Username',
-                        prefixIcon: Icon(_isAdmin ? Icons.admin_panel_settings : Icons.person),
+                        prefixIcon: Icon(Icons.person),
                       ),
                     ),
                     const SizedBox(height: 16),
@@ -96,7 +95,7 @@ class _LoginPageState extends State<LoginPage> {
                       onPressed: () async {
                         customDialog!.showLoadingDialog();
 
-                        User user = Users().login(_usernameController.text, _passwordController.text, _isAdmin);
+                        User user = Users().login(_usernameController.text, _passwordController.text);
                         if (user.name.isEmpty) {
                           Toast.show(context, 'Invalid username or password! Please try again.');
                           customDialog!.dismiss();
@@ -108,24 +107,11 @@ class _LoginPageState extends State<LoginPage> {
                         if (!context.mounted) return;
                         Navigator.pushReplacement(
                           context,
-                          MaterialPageRoute(builder: (context) => HomePage(user: user, isAdmin: _isAdmin)),
+                          MaterialPageRoute(builder: (context) => HomePage(user: user, isAdmin: user.role == 'admin' ? true : false)),
                         );
                       },
                       icon: const Icon(Icons.login),
-                      label: Text('${_isAdmin ? 'Admin' : 'User'} Login'),
-                    ),
-                    const SizedBox(height: 16),
-                    OutlinedButton.icon(
-                      style: ElevatedButton.styleFrom(
-                        minimumSize: const Size(double.infinity, 48),
-                      ),
-                      onPressed: () {
-                        setState(() {
-                          _isAdmin = !_isAdmin;
-                        });
-                      },
-                      icon: Icon(_isAdmin ? Icons.person : Icons.admin_panel_settings),
-                      label: Text('Login as ${_isAdmin ? 'User' : 'Admin'}'),
+                      label: const Text('Login'),
                     ),
                   ],
                 ),

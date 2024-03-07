@@ -6,8 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 class ArduinoServerAPI {
-  static String _baseUrlOne = 'http://192.168.161.221'; // Home - Gate
-  static String _baseUrlTwo = 'http://192.168.161.202'; // Water - AQ
+  static String _baseUrlOne = 'http://192.168.14.221'; // Home - Gate
+  static String _baseUrlTwo = 'http://192.168.14.202'; // Water - AQ
   static const timeout = Duration(seconds: 10);
 
   BuildContext context;
@@ -15,6 +15,7 @@ class ArduinoServerAPI {
   ArduinoServerAPI({required this.context});
 
   Future<bool> getStatus() async {
+    await getWeather();
     String msg = "";
 
     try {
@@ -23,8 +24,6 @@ class ArduinoServerAPI {
       final json = convert.jsonDecode(response.body);
 
       if (json == null || json['success'] != "true") return false;
-
-      await getWeather();
 
       msg = json['message'];
 
@@ -158,11 +157,6 @@ class ArduinoServerAPI {
       final json = convert.jsonDecode(response.body);
 
       if (json == null || json['success'] != "true") return false;
-
-      double level = double.parse(json['level']);
-
-      Water water = Water(level: level);
-      Status.setWater(water);
 
       return true;
     } catch (e) {

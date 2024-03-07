@@ -95,6 +95,7 @@ class AutomationFragmentState extends State<AutomationFragment> {
                     value: _gate,
                     onChanged: (value) async {
                       if (!value) return;
+                      if (!await ArduinoServerAPI(context: context).openSecurityGate()) return;
 
                       setState(() {
                         _gate = value;
