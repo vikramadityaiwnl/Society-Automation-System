@@ -24,16 +24,15 @@ class GarbageDetection {
     }
     
     void detect() {
-      if(digitalRead(IR_SENSOR_PIN) == HIGH) return;
+      if(digitalRead(IR_SENSOR_PIN) == LOW) {
+        delay(500);
+        int moisture = digitalRead(MOISTURE_PIN);
 
-      delay(1000);
-
-      int moisture = digitalRead(MOISTURE_PIN);      
-
-      if(moisture == HIGH) {
-        moveServo(CLOCK_WISE);
-      } else {
-        moveServo(ANTI_CLOCK_WISE);
+        if(moisture == HIGH) {
+          moveServo(CLOCK_WISE);
+        } else {
+          moveServo(ANTI_CLOCK_WISE);
+        }
       }
     }
 

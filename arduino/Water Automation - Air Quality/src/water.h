@@ -38,8 +38,6 @@ class Water {
         digitalWrite(MOTOR_PIN, HIGH);
       }
 
-      Serial.println("Water Level: " + String(waterLevel) + " %");
-
       String jsonString = "{\"success\": \"true\", \"message\": \"water_level: " + String(waterLevel) + "\"}";
       sendResponse(jsonString);
     }
