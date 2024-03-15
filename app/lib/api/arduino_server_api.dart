@@ -126,7 +126,6 @@ class ArduinoServerAPI {
       return true;
     } catch (e) {
       log(e.toString());
-      // msg = "Something went wrong! Please try again later.";
       return false;
     }
   }
@@ -138,7 +137,7 @@ class ArduinoServerAPI {
 
       if (json == null || json['success'] != "true") return false;
 
-      double level = double.parse(json['level']);
+      double level = double.parse(json['water_level']);
 
       Water water = Water(level: level);
       Status.setWater(water);
@@ -146,7 +145,6 @@ class ArduinoServerAPI {
       return true;
     } catch (e) {
       log(e.toString());
-      // msg = "Something went wrong! Please try again later.";
       return false;
     }
   }
@@ -161,7 +159,6 @@ class ArduinoServerAPI {
       return true;
     } catch (e) {
       log(e.toString());
-      // msg = "Something went wrong! Please try again later.";
       return false;
     }
   }

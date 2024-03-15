@@ -38,7 +38,7 @@ class Water {
         digitalWrite(MOTOR_PIN, HIGH);
       }
 
-      String jsonString = "{\"success\": \"true\", \"message\": \"water_level: " + String(waterLevel) + "\"}";
+      String jsonString = "{\"success\": \"true\", \"water_level: " + String(waterLevel) + "\"}";
       sendResponse(jsonString);
     }
 };
